@@ -15,7 +15,7 @@ for index in range(1, 3):
         name = product.find("h3", {"class": "title MuiBox-root css-147g3v1"})
         description = product.find("div", {"class": "MuiBox-root css-9xskfy"})
         price = product.find("div", {"class": "MuiBox-root css-qr51gz"})
-        image = product.find("img")
+        image = product.find("div", {"class": "MuiBox-root css-14j5i03"}).find("a").find("img")
 
         new_obj = {
             "sku": int(re.findall(r'\d+', sku["href"])[0]),
@@ -24,8 +24,8 @@ for index in range(1, 3):
             "price": price.text,
             "image": image["src"],
         }
-        
-        products_list.append(new_obj)
 
+        products_list.append(new_obj)
+        
 with open("products_list.json", "w", encoding="utf-8") as file:
     file.write(str(products_list))
