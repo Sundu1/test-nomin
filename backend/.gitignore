@@ -1,0 +1,10 @@
+/__pycache__
+
+static_files/gift_images/*
+static_files/profile_images/*
+# static_files/invitation_log/*
+
+/alembic.ini
+/config.py
+/fastapi.log
+/.env
