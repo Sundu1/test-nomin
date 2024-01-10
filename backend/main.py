@@ -8,9 +8,7 @@ from datetime import datetime
 from apps.admin.app import app as app_admn
 from apps.file.app import app as app_file
 
-
 app = FastAPI()
-
 
 origins = ["*"]
 app.add_middleware(
@@ -21,10 +19,8 @@ app.add_middleware(
     allow_headers=["*"]
 )
 
-
 app.mount("/_admin", app_admn)
 app.mount("/_file", app_file)
-
 
 if __name__ == "__main__":
     uvicorn.run("main:app", host="0.0.0.0", port=8000, reload=True)

@@ -15,4 +15,16 @@ const getProducts = async (setData, search_value) => {
   }
 };
 
-export { getProducts };
+const getRandomProducts = async (setData, search_value) => {
+  try {
+    const response = await axios.get(`${API_URL}/_admin/products/random/list`);
+    const data = await response.data;
+    if (data) {
+      setData(data);
+    }
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+export { getProducts, getRandomProducts };

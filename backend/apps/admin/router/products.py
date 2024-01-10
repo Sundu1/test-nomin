@@ -34,4 +34,15 @@ def products_list(search_object: schemas.ProductListSearch):
         result = df_new.to_json(orient="records")
         return json.loads(result)
     return []
+
+
+@router.get('/random/list')
+def products_list():
+    dir_path = "data/products_list.json"
+    if os.path.exists(dir_path):
+        df = pd.read_json(dir_path)
+        df_new = df.sample(3)
+        result = df_new.to_json(orient="records")
+        return json.loads(result)
+    return []
     

@@ -1,6 +1,6 @@
 "use client";
 
-import { getProducts } from "@/app/services/products_model";
+import { getProducts, getRandomProducts } from "@/app/services/products_model";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 
@@ -8,6 +8,11 @@ export default function Home() {
   const { push } = useRouter();
   const [searchValue, setSearchValue] = useState("");
   const [products, setProducts] = useState([]);
+  const [randomProducts, setRandomProducts] = useState([]);
+
+  useEffect(() => {
+    getRandomProducts(setRandomProducts);
+  }, []);
 
   useEffect(() => {
     getProducts(setProducts, searchValue);
@@ -86,6 +91,44 @@ export default function Home() {
                     );
                   })
                 : null}
+            </div>
+            <div>
+              <h1 className="text-center pt-10 text-[25px]">
+                Онцлох бүтээгдэхүүнүүд
+              </h1>
+              <div className="flex flex-wrap pl-10">
+                {randomProducts.length > 0
+                  ? randomProducts.map((product) => {
+                      return (
+                        <div
+                          key={product.sku}
+                          className="m-2 h-[380px] w-[300px] rounded-[15px] bg-white shadow-lg flex flex-col justify-between"
+                        >
+                          <div className="flex justify-center">
+                            <img
+                              className="block px-[36px] pt-10"
+                              src={product.image}
+                            />
+                          </div>
+                          <div className="h-[100px] px-5 py-5 font-montserrat flex flex-col justify-between">
+                            <h3 className="text-[14px] uppercase text-[color: rgb(43, 52, 69)]">
+                              {product.name}
+                            </h3>
+                            <div className="text-[14px] text-gray-500">
+                              {product.description &&
+                              product.description.length > 30
+                                ? product.description.slice(0, 31) + "..."
+                                : product.description}
+                            </div>
+                            <div className="text-blue-500 font-bold py-1">
+                              {product.price}
+                            </div>
+                          </div>
+                        </div>
+                      );
+                    })
+                  : null}
+              </div>
             </div>
           </div>
         </div>
