@@ -1,18 +1,13 @@
 from fastapi import FastAPI, APIRouter
 from fastapi import Request, FastAPI
-from fastapi.middleware.cors import CORSMiddleware
 import logging
 import os
-from dotenv import load_dotenv
-from fastapi.encoders import jsonable_encoder
 from PIL import Image
 from schemas import schemas
 import json
-
+import pandas as pd
 
 app = FastAPI()
-load_dotenv()
-
 
 router = APIRouter(
     prefix="/products",
@@ -20,12 +15,23 @@ router = APIRouter(
     responses={404: {"description": "Not found"}},
 )
 
-
 @router.post('/list')
-def products_list(search_value: schemas.ProductListSearch):
-    with open("data/products_list.json", "r", encoding='utf-8') as file:
-        json_data = json.load(file)
-    
-    print(len(json_data))
-    return json_data
+def products_list(search_object: schemas.ProductListSearch):
+    dir_path = "data/products_list.json"
+    if os.path.exists(dir_path):
+        df = pd.read_json(dir_path)
+        pre_removal = search_object.search_value.split(" ")
+
+        values = []
+        for index, value in enumerate(pre_removal):
+            if index > 0 and value == "":
+                continue
+            else:
+                values.append(value)
+        
+        filter_value = df.applymap(lambda x: any(str(val).lower().strip() in str(x).lower() for val in values))
+        df_new = df[filter_value.any(axis=1)]
+        result = df_new.to_json(orient="records")
+        return json.loads(result)
+    return []
     
